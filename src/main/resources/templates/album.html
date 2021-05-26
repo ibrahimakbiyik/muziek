@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${album} ? ${album.naam} : 'Album niet gevonden'"></title>
+</head>
+<body>
+    <h1 th:if="not ${album}" th:text="|Album ${id} niet gevonden.|"></h1>
+    <th:block th:if="${album}" th:object="${album}">
+        <h1 th:text="|*{naam} (*{artiest.naam})|"></h1>
+        <ul>
+            <li th:each="track:*{tracks}" th:object="${track}"
+                th:text="|*{naam} *{tijd}|">
+            </li>
+        </ul>
+        <div>Totale Tijd: <th:block th:text="${album.tijd}"></th:block></div>
+        <form method="post" th:action="@{/albums/{id}/score(id=${album.id})}" th:object="${scoreForm}">
+            <label>Score:
+                <input th:field="*{score}" type="number" min="0" max="10">
+                <span th:errors="*{score}"></span></label>
+            <button>Wijzigen</button>
+        </form>
+    </th:block>
+</body>
+</html>
